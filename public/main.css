@@ -1,0 +1,22 @@
+.box {
+    position: relative;
+
+    margin: auto;
+}
+
+h1 {
+    margin: auto;
+    text-align: center;
+    margin-top: 2%;
+}
+
+h3 {
+    margin: auto;
+    text-align: justify;
+    margin-top: 2%;
+}
+
+body {
+    color: lawngreen;
+    background-color: black;
+}
