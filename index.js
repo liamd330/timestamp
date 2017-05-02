@@ -17,8 +17,6 @@ app.get("/", function(request, response) {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
     
 app.get(/(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec)/i, function (request, response) {
     
@@ -63,13 +61,6 @@ app.get(/^[^0-9]|(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(No
     response.end(JSON.stringify(jsonFile));
 
 })
-
-
-
-
-
-
-
 
 
 
