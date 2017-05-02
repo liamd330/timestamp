@@ -10,7 +10,6 @@ var port = process.env.PORT || 8000;
 var public = __dirname + "/public/";
 
 
-
 app.get("/", function(request, response) {
     response.sendFile(path.join(public + "index.html"));
 })
@@ -18,12 +17,14 @@ app.get("/", function(request, response) {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
     
-app.get(/(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec)/gi, function (request, response) {
+app.get(/(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec)/i, function (request, response) {
     
     var urlPath = url.parse(request.url, true);
     var pathname = urlPath.path.slice(1);
-    var parsedDate = moment(pathname).format("MMMM DDDD YYYY");
+    var parsedDate = moment(pathname).format("MMMM DD YYYY");
     var unixtime = moment(pathname).unix().toString();
     
     jsonFile = {
@@ -34,27 +35,12 @@ app.get(/(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec)
    response.end(JSON.stringify(jsonFile));
 });    
 
-/*
-app.get(/^[0-9]/, function (request, response) {
-    
-    jsonFile = {
-        "Natural Time" : null,
-        "Unixtime" : null
-    }
-    
-    response.end(JSON.stringify(jsonFile));
-
-})
-*/
-
-
-
-app.get(/^[0-9]/, function(request, response) {
+app.get(/[0-9]/, function(request, response) {
     
     var urlPath = url.parse(request.url, true);
     var pathname = urlPath.path.slice(1);
-    var parsedDate = moment("1-1-1970").add(pathname, 'seconds').format("MMMM DDDD YYYY");
-    var unixtime = moment(pathname).unix().toString();
+    var parsedDate = moment("1-1-1970").add(pathname, 'seconds').format("MMMM DD YYYY");
+    var unixtime = moment(Number(pathname) * 1000).unix().toString();
     
     jsonFile = {
         "Natural Time" : parsedDate,
@@ -65,6 +51,23 @@ app.get(/^[0-9]/, function(request, response) {
  
  
 })
+
+
+app.get(/^[^0-9]|(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec)]/i, function (request, response) {
+    
+    jsonFile = {
+        "Natural Time" : null,
+        "Unixtime" : null
+    }
+    
+    response.end(JSON.stringify(jsonFile));
+
+})
+
+
+
+
+
 
 
 
