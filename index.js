@@ -3,60 +3,71 @@ var url = require('url');
 var path = require('path');
 var express = require('express');
 var app = express();
+var moment = require('moment');
+
 
 var port = process.env.PORT || 8000;
-
 var public = __dirname + "/public/";
 
-app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.get('/', function(request, response) {
+app.get("/", function(request, response) {
     response.sendFile(path.join(public + "index.html"));
 })
 
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+    
+app.get(/(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec)/gi, function (request, response) {
+    
+    var urlPath = url.parse(request.url, true);
+    var pathname = urlPath.path.slice(1);
+    var parsedDate = moment(pathname).format("MMMM DDDD YYYY");
+    var unixtime = moment(pathname).unix().toString();
+    
+    jsonFile = {
+        "Natural Time" : parsedDate,
+        "Unixtime" : unixtime
+    }
+    
+   response.end(JSON.stringify(jsonFile));
+});    
+
 /*
-
-
-var server = http.createServer(function (request, response) {
+app.get(/^[0-9]/, function (request, response) {
     
-    var date = new Date();
-    var year = date.getYear().toString();
-    var month = (Number(date.getMonth()) + 1).toString();
-    var day = date.getUTCDate().toString();
-    var unix = date.getTime().toString();
-    
-    var urlObj = url.parse(request.url, true);
-    var time = urlObj.query;
-    var pathname = urlObj.pathname;
-   
-    
-    response.sendFile(path.join(public + "index.html"));
-    
-    
-    if (pathname === "/") {
-        response.end("new home page");
+    jsonFile = {
+        "Natural Time" : null,
+        "Unixtime" : null
     }
     
-    else if (pathname === '/hi') {
-        response.end("hi");
-    }
-    
-    else if (pathname === '/date') {
-        response.end(month + date + year);
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-}); 
+    response.end(JSON.stringify(jsonFile));
 
+})
 */
+
+
+
+app.get(/^[0-9]/, function(request, response) {
+    
+    var urlPath = url.parse(request.url, true);
+    var pathname = urlPath.path.slice(1);
+    var parsedDate = moment("1-1-1970").add(pathname, 'seconds').format("MMMM DDDD YYYY");
+    var unixtime = moment(pathname).unix().toString();
+    
+    jsonFile = {
+        "Natural Time" : parsedDate,
+        "Unixtime" : unixtime
+    }
+    
+   response.end(JSON.stringify(jsonFile));
+ 
+ 
+})
+
+
+
 
 
 app.listen(port);
